@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coolpy7 mqttjs client demo</title>
+    <script src="./lib/browserMqtt.js"></script>
+</head>
+<script>
+    // 连接选项
+    const options = {
+        connectTimeout: 5000, // 超时时间
+        keepalive: 60,
+        reconnectPeriod:2000,
+        // 认证信息
+        clientId: 'cp7-clientid-websocket',
+        username: 'cp7-username-websocket',
+        password: 'cp7-password-websocket',
+    }
+
+    const client = mqtt.connect('mqtt://127.0.0.1:8083', options)
+
+    client.on('connect', function () {
+        client.subscribe('coolpy/chatroom', function (err) {
+            if (!err) {
+                //client.publish('presence', 'Hello mqtt')
+                console.log("sub ok")
+            }
+        })
+    })
+
+    client.on('reconnect', (error) => {
+        console.log('正在重连:', error)
+    })
+
+    client.on('error', (error) => {
+        console.log('连接失败:', error)
+    })
+
+    client.on('message', function (topic, message) {
+        // message is Buffer
+        console.log(message.toString())
+    })
+</script>
+<body>
+</body>
+</html>
